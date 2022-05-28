@@ -54,6 +54,7 @@ public class registerActivity extends AppCompatActivity {
                                 String userID = mAuth.getCurrentUser().getUid();
                                 userModel user = new userModel(userName, "Student", userID);
                                 fstore.collection("Users").document(userID).set(user);
+                                startActivity(new Intent(registerActivity.this,HomePage.class));
                             } else {
                                 makeToast("" + task.getException().getMessage());
                             }
