@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.IdeationApp">
         <activity
+            android:name=".LoginActivity"
+            android:exported="false" />
+        <activity
             android:name=".registerActivity"
             android:exported="false" />
         <activity
