@@ -103,6 +103,7 @@
                         android:layout_height="match_parent"
                         android:background="@color/background"
                         android:hint="Email"
+                        android:inputType="textEmailAddress"
                         android:textColor="@color/black"
                         android:textColorHint="#707070"
                         android:textSize="14sp" />

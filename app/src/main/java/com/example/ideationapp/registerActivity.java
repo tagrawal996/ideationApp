@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -15,12 +16,14 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class registerActivity extends AppCompatActivity {
 
     Button register;
     TextInputEditText username,email,password;
     FirebaseAuth mAuth;
+    FirebaseFirestore fstore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +35,7 @@ public class registerActivity extends AppCompatActivity {
         email = findViewById(R.id.emailsignup);
         password = findViewById(R.id.passwordsignup);
         mAuth = FirebaseAuth.getInstance();
+        fstore = FirebaseFirestore.getInstance();
 
         register.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -46,14 +50,23 @@ public class registerActivity extends AppCompatActivity {
                     mAuth.createUserWithEmailAndPassword(emails,passwords).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
-
+                            if (task.isSuccessful()) {
+                                String userID = mAuth.getCurrentUser().getUid();
+                                userModel user = new userModel(userName, "Student", userID);
+                                fstore.collection("Users").document(userID).set(user);
+                            } else {
+                                makeToast("" + task.getException().getMessage());
+                            }
                         }
-
                     });
                 }
 
             }
         });
+    }
+
+    private void makeToast(String s) {
+        Toast.makeText(this, s, Toast.LENGTH_LONG).show();
     }
 
     public void LoginPage(View view) {
