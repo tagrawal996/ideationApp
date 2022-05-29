@@ -51,20 +51,18 @@ public class LoginActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                bar.setVisibility(View.VISIBLE);
                 user = email.getText().toString().trim();
                 pass = password.getText().toString().trim();
                 if (user.isEmpty()){
                     email.setError("Email is Required");
                     email.requestFocus();
-                    bar.setVisibility(View.GONE);
                 }
                 if (pass.isEmpty()){
                     password.setError("Email is Required");
                     password.requestFocus();
-                    bar.setVisibility(View.GONE);
                 }
                 else{
+                    bar.setVisibility(View.VISIBLE);
                     mAuth.signInWithEmailAndPassword(user,pass).
                             addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                                 @Override
