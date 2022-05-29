@@ -1,7 +1,14 @@
 package com.example.ideationapp;
 
-public class userModel {
-    private String userName,profession,userID;
+import java.io.Serializable;
+
+public class userModel implements Serializable {
+    private String userName;
+    private String profession;
+    private String userID;
+
+    private String Address;
+
     private int followCount,totalHits,maxHits;
 
     public int getFollowCount() {
@@ -28,13 +35,25 @@ public class userModel {
         this.maxHits = maxHits;
     }
 
-    public userModel(String userName, String profession, String userID) {
+    public String getAddress() {
+        return Address;
+    }
+
+    public void setAddress(String address) {
+        Address = address;
+    }
+
+    public userModel() {
+    }
+
+    public userModel(String userName, String profession, String userID, String address) {
         this.userName = userName;
         this.profession = profession;
         this.userID = userID;
         this.followCount=0;
         this.totalHits=0;
         this.maxHits=0;
+        this.Address=address;
     }
 
     public String getUserName() {

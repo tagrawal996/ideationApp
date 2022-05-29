@@ -50,14 +50,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
                     android:layout_marginStart="8dp"
+                    android:layout_marginTop="40dp"
                     android:layout_marginEnd="8dp"
                     android:background="@color/background"
                     android:textColorHint="#707070"
-                    app:boxCornerRadiusBottomEnd="15dp"
-                    app:boxCornerRadiusBottomStart="15dp"
-                    app:boxCornerRadiusTopEnd="15dp"
-                    app:boxCornerRadiusTopStart="15dp"
-                    app:layout_constraintBottom_toTopOf="@+id/TILemailsignup"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="@+id/TILemailsignup"
@@ -98,7 +94,7 @@
                     app:startIconTint="#99FF1744">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/emailsignup"
+                        android:id="@+id/phoneNo"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="@color/background"
@@ -155,6 +151,7 @@
                     android:textColor="@color/white"
                     android:textSize="14sp"
                     android:textStyle="bold"
+                    android:visibility="visible"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -189,6 +186,19 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/signup" />
+
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    style="?android:attr/progressBarStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="52dp"
+                    android:indeterminateTint="@color/primary"
+                    android:visibility="invisible"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/TILpasswordsignup" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
 

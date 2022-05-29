@@ -33,16 +33,18 @@ public class Profile_fragment extends Fragment {
 
         getUser();
 
+        if (fAuth.getCurrentUser().isEmailVerified())
+        binding.userName.setText("verified");
+        else binding.userName.setText("not verified");
+
         binding.logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 fAuth.signOut();
-                startActivity(new Intent(getContext(),HomePage.class));
+                startActivity(new Intent(getContext(),registerActivity.class));
+                getActivity().finish();
             }
         });
-
-
-
 
         return binding.getRoot();
     }
@@ -62,8 +64,8 @@ public class Profile_fragment extends Fragment {
     private void updateUser(userModel user) {
         binding.userName.setText(user.getUserName());
         binding.workProfession.setText(user.getProfession());
-        binding.followCount.setText(user.getFollowCount());
-        binding.totalHits.setText(user.getTotalHits());
-        binding.maxHits.setText(user.getMaxHits());
+        binding.followCount.setText(String.valueOf(user.getFollowCount()));
+        binding.totalHits.setText(String.valueOf(user.getTotalHits()));
+        binding.maxHits.setText(String.valueOf(user.getMaxHits()));
     }
 }

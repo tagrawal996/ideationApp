@@ -20,8 +20,6 @@ public class About_fragment extends Fragment {
 
         binding=FragmentAboutFragmentBinding.inflate(inflater, container, false);
 
-
-
         return binding.getRoot();
     }
 }
