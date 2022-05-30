@@ -22,6 +22,7 @@ public class HomePage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
+        replace(new Home_fragment());
 
         bottom_nav = findViewById(R.id.nav);
 
@@ -32,6 +33,7 @@ public class HomePage extends AppCompatActivity {
                 if (item.getItemId()==R.id.home) replace(new Home_fragment());
                 else if (item.getItemId()==R.id.feed) replace(new Feed_fragment());
                 else if (item.getItemId()==R.id.bookmark) replace(new Bookmark_fragment());
+                else if (item.getItemId()==R.id.idea_about) replace(new About_fragment());
                 else replace(new Profile_fragment());
                 return true;
             }
