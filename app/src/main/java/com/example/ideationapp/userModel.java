@@ -6,10 +6,10 @@ public class userModel implements Serializable {
     private String userName;
     private String profession;
     private String userID;
-
     private String Address;
-
     private int followCount,totalHits,maxHits;
+
+    public userModel() { }
 
     public int getFollowCount() {
         return followCount;
@@ -43,8 +43,6 @@ public class userModel implements Serializable {
         Address = address;
     }
 
-    public userModel() {
-    }
 
     public userModel(String userName, String profession, String userID, String address) {
         this.userName = userName;
