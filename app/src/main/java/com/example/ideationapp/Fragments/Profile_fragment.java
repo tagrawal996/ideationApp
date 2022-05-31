@@ -1,16 +1,16 @@
-package com.example.ideationapp;
+package com.example.ideationapp.Fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
+import androidx.fragment.app.Fragment;
+
+import com.example.ideationapp.Model.userModel;
 import com.example.ideationapp.databinding.FragmentProfileFragmentBinding;
+import com.example.ideationapp.registerActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -41,7 +41,7 @@ public class Profile_fragment extends Fragment {
             @Override
             public void onClick(View view) {
                 fAuth.signOut();
-                startActivity(new Intent(getContext(),registerActivity.class));
+                startActivity(new Intent(getContext(), registerActivity.class));
                 getActivity().finish();
             }
         });
@@ -62,6 +62,8 @@ public class Profile_fragment extends Fragment {
     }
 
     private void updateUser(userModel user) {
+        binding.constraintLayout2.setVisibility(View.VISIBLE);
+        binding.progressBar4.setVisibility(View.GONE);
         binding.userName.setText(user.getUserName());
         binding.workProfession.setText(user.getProfession());
         binding.followCount.setText(String.valueOf(user.getFollowCount()));

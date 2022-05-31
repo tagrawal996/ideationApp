@@ -4,14 +4,27 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Profile_fragment">
+    tools:context=".Fragments.Profile_fragment">
+
+    <ProgressBar
+        android:id="@+id/progressBar4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:elevation="10dp"
+        android:foregroundGravity="center"
+        android:indeterminateTint="@color/primary"
+        android:layout_gravity="center" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/gradient">
+        android:background="@drawable/gradient"
+        android:visibility="invisible">
+
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/cardView"
             android:layout_width="120dp"
             android:layout_height="120dp"
             app:cardCornerRadius="60dp"
@@ -24,7 +37,7 @@
                 android:id="@+id/imageView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:src="@tools:sample/avatars" />
+                tools:src="@drawable/avatar" />
         </androidx.cardview.widget.CardView>
 
         <androidx.constraintlayout.widget.ConstraintLayout

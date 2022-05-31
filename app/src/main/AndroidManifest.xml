@@ -16,7 +16,7 @@
             android:name=".otpVerification"
             android:exported="false" />
         <activity
-            android:name=".HomePage"
+            android:name=".Bottom_nav"
             android:exported="false" />
         <activity
             android:name=".LoginActivity"

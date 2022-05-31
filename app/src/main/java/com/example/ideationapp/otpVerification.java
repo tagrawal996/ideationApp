@@ -5,22 +5,21 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.ideationapp.Model.userModel;
 import com.example.ideationapp.databinding.ActivityOtpVerificationBinding;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.ArrayList;
 
 public class otpVerification extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
@@ -30,6 +29,7 @@ public class otpVerification extends AppCompatActivity implements AdapterView.On
     FirebaseAuth fAuth;
     FirebaseFirestore fstore;
     String email,pass;
+    FirebaseDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,9 +56,15 @@ public class otpVerification extends AppCompatActivity implements AdapterView.On
                     makeToast("Profession is Required");
                     return;
                 }
-                userModel user = new userModel(userName, profession, userID, adress);
+                userModel user = new userModel(userName, profession, userID, adress,"default");
+                db.getReference().child("Users").child(userID).setValue(user).
+                        addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                startActivity(new Intent(otpVerification.this, Bottom_nav.class));
+                            }
+                        });
                 fstore.collection("Users").document(userID).set(user);
-                startActivity(new Intent(otpVerification.this,HomePage.class));
             }
         });
     }
@@ -85,6 +91,7 @@ public class otpVerification extends AppCompatActivity implements AdapterView.On
         fAuth = FirebaseAuth.getInstance();
         email= getIntent().getStringExtra("email");
         pass = getIntent().getStringExtra("password");
+        db = FirebaseDatabase.getInstance();
     }
 
     public void resendEmail(View view){

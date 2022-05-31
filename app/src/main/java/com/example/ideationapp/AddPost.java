@@ -6,9 +6,13 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.ideationapp.Model.PostModel;
+import com.example.ideationapp.Model.userModel;
 import com.example.ideationapp.databinding.ActivityAddPostBinding;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -20,7 +24,8 @@ public class AddPost extends AppCompatActivity {
 
     FirebaseAuth fAuth;
     ActivityAddPostBinding binding;
-    FirebaseFirestore db;
+    FirebaseFirestore fstore;
+    FirebaseDatabase db;
     String uID,username,profession;
     PostModel post = new PostModel();
 
@@ -36,25 +41,12 @@ public class AddPost extends AppCompatActivity {
         binding.postButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                func1();
+                setUser();
             }
         });
 
 
         setContentView(binding.getRoot());
-    }
-
-    private void func1() {
-        db.collection("Users").document(uID).get().
-                addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot shot) {
-                        userModel userModel = shot.toObject(userModel.class);
-                        username = userModel.getUserName();
-                        profession = userModel.getProfession();
-                        setUser();
-                    }
-                });
     }
 
     private void setUser() {
@@ -73,24 +65,27 @@ public class AddPost extends AppCompatActivity {
         post.setUserID(uID);
         post.setOverview(overview);
         post.setDescription(description);
-        post.setHitCount(0);
         post.setTime(time);
-        post.setProfession(profession);
-        post.setUsername(username);
         uploadData();
     }
 
     private void uploadData() {
         Date time = Calendar.getInstance().getTime();
-        db.collection("posts").
-                document(uID+time).set(post);
-        startActivity(new Intent(AddPost.this,HomePage.class));
+
+        DatabaseReference ref = db.getReference("posts");
+        String postid = ref.push().getKey();
+        post.setPostUrl(postid);
+        ref.child(postid).setValue(post);
+        fstore.collection("posts").
+                document(post.getPostUrl()).set(post);
+        startActivity(new Intent(AddPost.this, Bottom_nav.class));
     }
 
     private void initialise() {
         fAuth= FirebaseAuth.getInstance();
-        db = FirebaseFirestore.getInstance();
+        fstore = FirebaseFirestore.getInstance();
         uID = fAuth.getCurrentUser().getUid();
-        System.out.println(uID);
+        db=FirebaseDatabase.getInstance();
+
     }
 }

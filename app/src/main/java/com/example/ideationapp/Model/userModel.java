@@ -1,4 +1,4 @@
-package com.example.ideationapp;
+package com.example.ideationapp.Model;
 
 import java.io.Serializable;
 
@@ -6,6 +6,25 @@ public class userModel implements Serializable {
     private String userName;
     private String profession;
     private String userID;
+    private String imageURL;
+    private String bio;
+
+    public String getImageURL() {
+        return imageURL;
+    }
+
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+
     private String Address;
     private int followCount,totalHits,maxHits;
 
@@ -44,7 +63,7 @@ public class userModel implements Serializable {
     }
 
 
-    public userModel(String userName, String profession, String userID, String address) {
+    public userModel(String userName, String profession, String userID, String address, String imageURL) {
         this.userName = userName;
         this.profession = profession;
         this.userID = userID;
@@ -52,6 +71,7 @@ public class userModel implements Serializable {
         this.totalHits=0;
         this.maxHits=0;
         this.Address=address;
+        this.imageURL=imageURL;
     }
 
     public String getUserName() {

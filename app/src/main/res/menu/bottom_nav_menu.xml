@@ -9,7 +9,7 @@
         android:icon="@drawable/feed_vec"
         android:id="@+id/feed"/>
     <item android:title="Ideation"
-        android:icon="@drawable/icon"
+        android:icon="@drawable/ic_search"
         android:id="@+id/idea_about"/>
     <item android:title="mark"
         android:icon="@drawable/bookmarks_vec"

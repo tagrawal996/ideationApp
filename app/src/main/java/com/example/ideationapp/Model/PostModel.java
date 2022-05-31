@@ -1,26 +1,17 @@
-package com.example.ideationapp;
+package com.example.ideationapp.Model;
 
 public class PostModel {
-    String overview,description,time,userID,username,profession;
-    int hitCount;
+    String overview,description,time,userID,postUrl;
+
+    public String getPostUrl() {
+        return postUrl;
+    }
+
+    public void setPostUrl(String postUrl) {
+        this.postUrl = postUrl;
+    }
 
     public PostModel() {
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getProfession() {
-        return profession;
-    }
-
-    public void setProfession(String profession) {
-        this.profession = profession;
     }
 
     public String getUserID() {
@@ -55,11 +46,4 @@ public class PostModel {
         this.time = time;
     }
 
-    public int getHitCount() {
-        return hitCount;
-    }
-
-    public void setHitCount(int hitCount) {
-        this.hitCount = hitCount;
-    }
 }
