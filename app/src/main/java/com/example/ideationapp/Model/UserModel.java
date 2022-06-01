@@ -2,7 +2,7 @@ package com.example.ideationapp.Model;
 
 import java.io.Serializable;
 
-public class userModel implements Serializable {
+public class UserModel implements Serializable {
     private String userName;
     private String profession;
     private String userID;
@@ -28,7 +28,7 @@ public class userModel implements Serializable {
     private String Address;
     private int followCount,totalHits,maxHits;
 
-    public userModel() { }
+    public UserModel() { }
 
     public int getFollowCount() {
         return followCount;
@@ -63,7 +63,7 @@ public class userModel implements Serializable {
     }
 
 
-    public userModel(String userName, String profession, String userID, String address, String imageURL) {
+    public UserModel(String userName, String profession, String userID, String address, String imageURL) {
         this.userName = userName;
         this.profession = profession;
         this.userID = userID;

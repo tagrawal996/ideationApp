@@ -1,7 +1,6 @@
 package com.example.ideationapp.Adapter;
 
 import android.content.Context;
-import android.graphics.ColorSpace;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.ideationapp.Model.userModel;
+import com.example.ideationapp.Model.UserModel;
 import com.example.ideationapp.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -23,19 +22,17 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
-import org.w3c.dom.Text;
-
 import java.util.List;
 
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder> {
 
     private Context context;
-    private List<userModel> mUser;
+    private List<UserModel> mUser;
     private boolean isfrag;
 
     private FirebaseUser fuser;
 
-    public UserAdapter(Context context, List<userModel> mUser, boolean isfrag) {
+    public UserAdapter(Context context, List<UserModel> mUser, boolean isfrag) {
         this.context = context;
         this.mUser = mUser;
         this.isfrag = isfrag;
@@ -51,7 +48,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     @Override
     public void onBindViewHolder(@NonNull UserViewHolder holder, int position) {
         fuser = FirebaseAuth.getInstance().getCurrentUser();
-        userModel user= mUser.get(position);
+        UserModel user= mUser.get(position);
         holder.follow.setVisibility(View.VISIBLE);
         holder.profession.setText(user.getProfession());
         holder.username.setText(user.getUserName());

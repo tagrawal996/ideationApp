@@ -7,13 +7,10 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.ideationapp.Model.PostModel;
-import com.example.ideationapp.Model.userModel;
 import com.example.ideationapp.databinding.ActivityAddPostBinding;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;

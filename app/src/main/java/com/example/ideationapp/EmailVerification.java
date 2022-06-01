@@ -3,7 +3,6 @@ package com.example.ideationapp;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.Display;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -12,7 +11,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.ideationapp.Model.userModel;
+import com.example.ideationapp.Model.UserModel;
 import com.example.ideationapp.databinding.ActivityEmailVerificationBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -60,7 +59,7 @@ public class EmailVerification extends AppCompatActivity implements AdapterView.
                     makeToast("Profession is Required");
                     return;
                 }
-                userModel user = new userModel(userName, profession, userID, adress,"default");
+                UserModel user = new UserModel(userName, profession, userID, adress,"default");
                 db.getReference().child("Users").child(userID).setValue(user).
                         addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override

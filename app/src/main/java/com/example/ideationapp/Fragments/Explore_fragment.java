@@ -14,7 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.ideationapp.Adapter.UserAdapter;
-import com.example.ideationapp.Model.userModel;
+import com.example.ideationapp.Model.UserModel;
 import com.example.ideationapp.databinding.FragmentAboutFragmentBinding;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -28,7 +28,7 @@ import java.util.ArrayList;
 public class Explore_fragment extends Fragment {
 
     FragmentAboutFragmentBinding binding;
-    private ArrayList<userModel> users = new ArrayList<>();
+    private ArrayList<UserModel> users = new ArrayList<>();
     private UserAdapter adapter;
 
     @Override
@@ -75,7 +75,7 @@ public class Explore_fragment extends Fragment {
                 if (TextUtils.isEmpty(binding.searchBar.getText().toString())){
                     users.clear();
                     for(DataSnapshot shot : snapshot.getChildren()){
-                        userModel user = shot.getValue(userModel.class);
+                        UserModel user = shot.getValue(UserModel.class);
                         users.add(user);
                     }
                     adapter.notifyDataSetChanged();
@@ -99,7 +99,7 @@ public class Explore_fragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 users.clear();
                 for (DataSnapshot shot : snapshot.getChildren()){
-                    userModel user = shot.getValue(userModel.class);
+                    UserModel user = shot.getValue(UserModel.class);
                     users.add(user);
                 }
                 adapter.notifyDataSetChanged();

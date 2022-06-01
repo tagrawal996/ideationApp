@@ -1,14 +1,17 @@
 package com.example.ideationapp;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
-import com.example.ideationapp.Model.userModel;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
+import com.example.ideationapp.Adapter.CommentAdapter;
+import com.example.ideationapp.Model.CommentModel;
+import com.example.ideationapp.Model.UserModel;
 import com.example.ideationapp.databinding.ActivityCommentPageBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -20,6 +23,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class CommentPage extends AppCompatActivity {
@@ -28,6 +32,8 @@ public class CommentPage extends AppCompatActivity {
     private String postID,authorID;
     Intent intent;
     FirebaseUser fuser;
+    ArrayList<CommentModel> commentList = new ArrayList<>();
+    CommentAdapter adapter;
 
 
     @Override
@@ -42,6 +48,14 @@ public class CommentPage extends AppCompatActivity {
         
         getUserImage();
 
+
+        adapter = new CommentAdapter(CommentPage.this,commentList);
+        binding.commentsRecycler.setHasFixedSize(true);
+        binding.commentsRecycler.setLayoutManager(new LinearLayoutManager(CommentPage.this));
+        binding.commentsRecycler.setAdapter(adapter);
+
+        getComments();
+
         binding.postComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -53,6 +67,27 @@ public class CommentPage extends AppCompatActivity {
         });
 
     }
+
+    private void getComments() {
+        FirebaseDatabase.getInstance().getReference().child("comments").child(postID).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                commentList.clear();
+                for(DataSnapshot shot : snapshot.getChildren()){
+                    CommentModel comment = shot.getValue(CommentModel.class);
+                    commentList.add(comment);
+                }
+                adapter.notifyDataSetChanged();
+                binding.progressBar6.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
 
     private void pushComment(String comment) {
         HashMap<String,Object> map = new HashMap<>();
@@ -66,6 +101,7 @@ public class CommentPage extends AppCompatActivity {
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()){
                             makeToast("Comment Posted");
+                            binding.commentText.setText("");
                         }
                         else makeToast(task.getException().getMessage());
                     }
@@ -81,7 +117,7 @@ public class CommentPage extends AppCompatActivity {
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        userModel user = snapshot.getValue(userModel.class);
+                        UserModel user = snapshot.getValue(UserModel.class);
                         if (!user.getImageURL().equals("default"))
                         Picasso.get().load(user.getImageURL()).into(binding.userProfile);
                     }

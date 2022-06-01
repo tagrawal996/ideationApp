@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -14,16 +15,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ideationapp.CommentPage;
 import com.example.ideationapp.Model.PostModel;
-import com.example.ideationapp.Model.userModel;
+import com.example.ideationapp.Model.UserModel;
 import com.example.ideationapp.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 
@@ -37,6 +36,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.HomeViewHolder
     FirebaseFirestore fstore;
     String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
     boolean toshow;
+    DatabaseReference ref;
 
     public PostAdapter(List<PostModel> posts, Context context, boolean toshow) {
         this.posts = posts;
@@ -55,14 +55,28 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.HomeViewHolder
     @Override
     public void onBindViewHolder(@NonNull HomeViewHolder holder, int position) {
         PostModel post = posts.get(position);
+        ref = FirebaseDatabase.getInstance().getReference();
+
+        if (post.getUserID().equals(uid)){
+            holder.delete.setVisibility(View.VISIBLE);
+            holder.delete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ref.child("posts").child(post.getPostUrl()).removeValue();
+                    ref.child("likes").child(post.getPostUrl()).removeValue();
+                    ref.child("comments").child(post.getPostUrl()).removeValue();
+                    ref.child("saves").child(post.getPostUrl()).removeValue();
+                }
+            });
+        }
 
         holder.overView.setText(post.getOverview());
         holder.description.setText(post.getDescription());
-        FirebaseDatabase.getInstance().getReference().child("Users").
+        ref.child("Users").
                 child(post.getUserID()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                userModel user = snapshot.getValue(userModel.class);
+                UserModel user = snapshot.getValue(UserModel.class);
                 holder.profession.setText(user.getProfession());
                 holder.userName.setText(user.getUserName());
                 if (user.getImageURL().equals("default")){
@@ -79,29 +93,67 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.HomeViewHolder
 
         isLiked(post.getPostUrl(),holder.like,holder.likecount);
 
+        getSaveCount(post.getPostUrl(),holder.savecount, holder.bookmark);
+
         holder.comment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, CommentPage.class);
-                intent.putExtra("postId",post.getPostUrl());
-                intent.putExtra("authorId",post.getUserID());
+                gotoComments(post.getPostUrl(), post.getUserID());
+            }
+        });
+        holder.commentcount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                gotoComments(post.getPostUrl(), post.getUserID());
             }
         });
 
         getCommentCount(post.getPostUrl(),holder.commentcount);
 
+        holder.bookmark.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (holder.bookmark.getTag().equals(0))
+                    ref.child("saves").child(post.getPostUrl()).child(uid).setValue(true);
+                else
+                    ref.child("saves").child(post.getPostUrl()).child(uid).removeValue();
+            }
+        });
+
         holder.like.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (holder.like.getTag().equals(0)){
-                    FirebaseDatabase.getInstance().getReference().child("likes").child(post.getPostUrl()).
+                    ref.child("likes").child(post.getPostUrl()).
                             child(uid).setValue(true);
                 }
                 else{
-                    FirebaseDatabase.getInstance().getReference().child("likes").child(post.getPostUrl()).child(uid).removeValue();
+                    ref.child("likes").child(post.getPostUrl()).child(uid).removeValue();
                 }
             }
         });
+    }
+
+    private void getSaveCount(String postUrl, TextView savecount, ImageButton bookmark) {
+        ref.child("saves").child(postUrl).
+                addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        savecount.setText(snapshot.getChildrenCount()+" saves");
+                        if (snapshot.child(uid).exists()){
+                            bookmark.setTag(1);
+                            bookmark.setImageResource(R.drawable.ic_bookmarked);
+                        }
+                        else{
+                            bookmark.setTag(0);
+                            bookmark.setImageResource(R.drawable.bookmarks_vec);
+                        }
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
     }
 
     @Override
@@ -112,9 +164,10 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.HomeViewHolder
     public class HomeViewHolder extends RecyclerView.ViewHolder {
 
         private TextView userName, profession, overView, description;
-        private TextView likecount,commentcount,savecount,time;
+        private TextView likecount,commentcount,savecount,time, delete;
         private ImageView profileImage;
-        private ImageButton like, bookmark, delete, comment;
+        private ImageButton like, bookmark;
+        private LinearLayout comment;
 
         public HomeViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -130,14 +183,12 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.HomeViewHolder
             likecount = itemView.findViewById(R.id.likecount);
             commentcount = itemView.findViewById(R.id.commentCount);
             savecount = itemView.findViewById(R.id.shaveCount);
-            delete = itemView.findViewById(R.id.deleteButton);
+            delete = itemView.findViewById(R.id.deletePost);
         }
-
-
     }
 
     private void isLiked(String postId, ImageButton button, TextView likecount){
-        FirebaseDatabase.getInstance().getReference().child("likes").child(postId).addValueEventListener(new ValueEventListener() {
+        ref.child("likes").child(postId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 likecount.setText(snapshot.getChildrenCount()+" likes");
@@ -159,10 +210,10 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.HomeViewHolder
     }
 
     public void getCommentCount(String postID, TextView count){
-        FirebaseDatabase.getInstance().getReference().child("comments").child(postID).addValueEventListener(new ValueEventListener() {
+        ref.child("comments").child(postID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                count.setText(snapshot.getChildrenCount()+"Comments");
+                count.setText(snapshot.getChildrenCount()+" Comments");
             }
 
             @Override
@@ -170,6 +221,13 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.HomeViewHolder
 
             }
         });
+    }
+
+    public void gotoComments(String posturl,String postUserId){
+        Intent intent = new Intent(context, CommentPage.class);
+        intent.putExtra("postId",posturl);
+        intent.putExtra("authorId",postUserId);
+        context.startActivity(intent);
     }
 
 }

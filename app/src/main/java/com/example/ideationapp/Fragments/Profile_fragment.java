@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
 
-import com.example.ideationapp.Model.userModel;
+import com.example.ideationapp.Model.UserModel;
 import com.example.ideationapp.databinding.FragmentProfileFragmentBinding;
 import com.example.ideationapp.registerActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -55,13 +55,13 @@ public class Profile_fragment extends Fragment {
                 addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot shot) {
-                userModel user = shot.toObject(userModel.class);
+                UserModel user = shot.toObject(UserModel.class);
                 if (user!=null) updateUser(user);
             }
         });
     }
 
-    private void updateUser(userModel user) {
+    private void updateUser(UserModel user) {
         binding.constraintLayout2.setVisibility(View.VISIBLE);
         binding.progressBar4.setVisibility(View.GONE);
         binding.userName.setText(user.getUserName());
