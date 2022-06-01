@@ -10,10 +10,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.IdeationApp">
         <activity
+            android:name=".CommentPage"
+            android:exported="false" />
+        <activity
             android:name=".AddPost"
             android:exported="false" />
         <activity
-            android:name=".otpVerification"
+            android:name=".EmailVerification"
             android:exported="false" />
         <activity
             android:name=".Bottom_nav"

@@ -1,17 +1,19 @@
 package com.example.ideationapp;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.Display;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.ideationapp.Model.userModel;
-import com.example.ideationapp.databinding.ActivityOtpVerificationBinding;
+import com.example.ideationapp.databinding.ActivityEmailVerificationBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -21,9 +23,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-public class otpVerification extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class EmailVerification extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
-    ActivityOtpVerificationBinding binding;
+    ActivityEmailVerificationBinding binding;
     FirebaseUser fuser;
     String profession;
     FirebaseAuth fAuth;
@@ -34,13 +36,15 @@ public class otpVerification extends AppCompatActivity implements AdapterView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityOtpVerificationBinding.inflate(getLayoutInflater());
+        binding = ActivityEmailVerificationBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         initialise();
         setSpinner();
 
         binding.userEmail.setText(email);
+
+
 
         binding.submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,13 +65,17 @@ public class otpVerification extends AppCompatActivity implements AdapterView.On
                         addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
-                                startActivity(new Intent(otpVerification.this, Bottom_nav.class));
+                                SharedPreferences sp = getSharedPreferences("handleReg",MODE_PRIVATE);
+                                sp.edit().putInt("posi",2).apply();
+                                startActivity(new Intent(EmailVerification.this, Bottom_nav.class));
                             }
                         });
                 fstore.collection("Users").document(userID).set(user);
             }
         });
     }
+
+
 
     public void check(View view) {
         fAuth.signInWithEmailAndPassword(email,pass);
@@ -79,7 +87,7 @@ public class otpVerification extends AppCompatActivity implements AdapterView.On
             binding.address.setVisibility(View.VISIBLE);
             binding.verefied.setVisibility(View.VISIBLE);
             binding.submitButton.setVisibility(View.VISIBLE);
-            Toast.makeText(otpVerification.this, "Email is Verified", Toast.LENGTH_SHORT).show();
+            Toast.makeText(EmailVerification.this, "Email is Verified", Toast.LENGTH_SHORT).show();
         }
         else makeToast("Please Verify Email First");
     }
@@ -98,12 +106,12 @@ public class otpVerification extends AppCompatActivity implements AdapterView.On
         fuser.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
-                Toast.makeText(otpVerification.this, "Verification Code is send", Toast.LENGTH_SHORT).show();
+                Toast.makeText(EmailVerification.this, "Verification Code is send", Toast.LENGTH_SHORT).show();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(otpVerification.this, "Error: "+e.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(EmailVerification.this, "Error: "+e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -129,6 +137,18 @@ public class otpVerification extends AppCompatActivity implements AdapterView.On
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
+
+    }
+
+    public void changeEmail(View view) {
+        fuser.delete();
+        startActivity(new Intent(EmailVerification.this,registerActivity.class));
+    }
+
+    @Override
+    protected void onDestroy() {
+        fuser.delete();
+        super.onDestroy();
 
     }
 }

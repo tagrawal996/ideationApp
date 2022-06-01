@@ -20,7 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/gradient"
-        android:visibility="invisible">
+        android:visibility="visible">
 
 
         <androidx.cardview.widget.CardView
@@ -36,8 +36,7 @@
             <ImageView
                 android:id="@+id/imageView"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                tools:src="@drawable/avatar" />
+                android:layout_height="wrap_content" />
         </androidx.cardview.widget.CardView>
 
         <androidx.constraintlayout.widget.ConstraintLayout

@@ -3,6 +3,7 @@ package com.example.ideationapp;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 
@@ -24,8 +25,11 @@ public class MainActivity extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (fuser!=null) startActivity(new Intent(MainActivity.this, Bottom_nav.class));
-                else startActivity(new Intent(MainActivity.this,registerActivity.class));
+                SharedPreferences sp = getSharedPreferences("handleReg",MODE_PRIVATE);
+                int ck=sp.getInt("posi",0);
+                if (ck==0) startActivity(new Intent(MainActivity.this, registerActivity.class));
+                else if (ck==1) startActivity(new Intent(MainActivity.this, EmailVerification.class));
+                else startActivity(new Intent(MainActivity.this,Bottom_nav.class));
                 finish();
             }
         },2000);

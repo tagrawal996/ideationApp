@@ -1,6 +1,7 @@
 package com.example.ideationapp.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.ideationapp.CommentPage;
 import com.example.ideationapp.Model.PostModel;
 import com.example.ideationapp.Model.userModel;
 import com.example.ideationapp.R;
@@ -61,8 +63,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.HomeViewHolder
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 userModel user = snapshot.getValue(userModel.class);
-                holder.profession.setText(user.getUserName());
-                holder.userName.setText(user.getProfession());
+                holder.profession.setText(user.getProfession());
+                holder.userName.setText(user.getUserName());
                 if (user.getImageURL().equals("default")){
                     holder.profileImage.setImageResource(R.drawable.avatar);
                 }
@@ -74,6 +76,19 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.HomeViewHolder
             }
         });
         holder.time.setText(post.getTime());
+
+        isLiked(post.getPostUrl(),holder.like,holder.likecount);
+
+        holder.comment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, CommentPage.class);
+                intent.putExtra("postId",post.getPostUrl());
+                intent.putExtra("authorId",post.getUserID());
+            }
+        });
+
+        getCommentCount(post.getPostUrl(),holder.commentcount);
 
         holder.like.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,17 +136,33 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.HomeViewHolder
 
     }
 
-    private void isLiked(String postId,ImageButton button){
+    private void isLiked(String postId, ImageButton button, TextView likecount){
         FirebaseDatabase.getInstance().getReference().child("likes").child(postId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                likecount.setText(snapshot.getChildrenCount()+" likes");
                 if (snapshot.child(uid).exists()){
                     button.setTag(1);
                     button.setImageResource(R.drawable.ic_liked);
                 }
                 else {
                     button.setTag(0);
+                    button.setImageResource(R.drawable.ic_like);
                 }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    public void getCommentCount(String postID, TextView count){
+        FirebaseDatabase.getInstance().getReference().child("comments").child(postID).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                count.setText(snapshot.getChildrenCount()+"Comments");
             }
 
             @Override

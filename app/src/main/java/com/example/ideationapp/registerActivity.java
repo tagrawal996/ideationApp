@@ -1,10 +1,10 @@
 package com.example.ideationapp;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -33,7 +33,6 @@ public class registerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-
         register = findViewById(R.id.signup);
         username = findViewById(R.id.namesignup);
         email = findViewById(R.id.phoneNo);
@@ -41,6 +40,7 @@ public class registerActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         fstore = FirebaseFirestore.getInstance();
         pbar = findViewById(R.id.progressBar);
+
 
         register.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,7 +62,7 @@ public class registerActivity extends AppCompatActivity {
                                 fuser.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void unused) {
-                                        Intent intent = new Intent(registerActivity.this,otpVerification.class);
+                                        Intent intent = new Intent(registerActivity.this, EmailVerification.class);
                                         intent.putExtra("userName",userName);
                                         intent.putExtra("email",emails);
                                         intent.putExtra("password",passwords);
